@@ -2,7 +2,7 @@ const express = require("express");
 const sqlite3 = require("sqlite3");
 const app = express();
 const cors = require("cors");
-const port = 3000;
+const port = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(cors());
@@ -57,6 +57,8 @@ function executeQuery(query) {
     });
   }
 
+
+
 app.get("/dua/:id", (req, res) => {
     const catID = req.params.id;
     const query = `SELECT * FROM dua WHERE subcat_id = ${catID}`;
@@ -67,6 +69,27 @@ app.get("/dua/:id", (req, res) => {
         return;
       }
       res.json(rows);
+    });
+  });
+
+
+  app.get("/numOfdua", (req, res) => {
+    const query = `SELECT * FROM dua WHERE cat_id`
+    db.all(query, (err, rows) => {
+      if(err) {
+        return res.status(500).json({error: err.message})
+      }
+      res.json(rows)
+    });
+  });
+
+  app.get("/numOfSubCat", (req, res) => {
+    const query = `SELECT * FROM sub_category WHERE cat_id`
+    db.all(query, (err, rows) => {
+      if(err) {
+        return res.status(500).json({error: err.message})
+      }
+      res.json(rows)
     });
   });
 
